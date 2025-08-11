@@ -4,7 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        default: '0.1.0'
+        description: 'Chart version'
+        required: true
+        default: '21.1.4'
 
 jobs:
   publish:
@@ -23,8 +25,12 @@ jobs:
 
       - name: Chart | Check
         id: chart_exists
+        env:
+          REGISTRY_PASSWORD: ${{ secrets.DOCKER_PAT }}
         run: |
-          if helm pull oci://registry-1.docker.io/pluralsh/helm-charts/console --version ${{ github.event.inputs.version }} > /dev/null 2>&1; then
+          helm registry login registry-1.docker.io -u floreks --password-stdin <<< $REGISTRY_PASSWORD
+          
+          if helm pull oci://registry-1.docker.io/bitnamicharts/nginx --version ${{ github.event.inputs.version }} > /dev/null 2>&1; then
             echo "exists=true" >> $GITHUB_OUTPUT
             echo "Chart version ${{ github.event.inputs.version }} already exists"
           else
