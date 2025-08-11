@@ -36,7 +36,7 @@ jobs:
       - name: Chart | OCI Push
         if: ${{ steps.chart_exists.outputs.exists == 'false' }}
         run: |
-          echo "Chart does not exist: ${{ steps.chart_exists.outputs.exists }}"
+          echo "Chart exists: ${{ steps.chart_exists.outputs.exists }}"
 
       - name: Chart | OCI Skip
         if: ${{ steps.chart_exists.outputs.exists == 'true' }}
